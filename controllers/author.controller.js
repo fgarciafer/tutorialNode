@@ -4,9 +4,9 @@ export const getAuthors = async (req, res) => {
 
     const authors = await AuthorModel.find().sort('id');
 
-    res.status(200).json({
+    res.status(200).json(
         authors
-    });
+    );
 }
 
 export const createAuthor = async (req, res) => {
@@ -79,9 +79,9 @@ export const getAuthorsPageable = async (req, res) => {
         content: response.docs,
         pageable: {
             pageNumber: response.page - 1,
-            pageSize: response.limit,
-            totalElements: response.totalDocs
-        }
+            pageSize: response.limit
+        },
+        totalElements: response.totalDocs
     });
 }
 

@@ -4,9 +4,9 @@ export const getCategories = async (req, res) => {
 
     const categories = await CategoryModel.find().sort('name');
 
-    res.status(200).json({
+    res.status(200).json(
         categories
-    });
+    );
 }
 
 export const createCategory = async (req, res) => {
