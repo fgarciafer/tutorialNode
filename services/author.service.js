@@ -23,7 +23,7 @@ export const updateAuthor = async (id, data) => {
         const author = await AuthorModel.findById(id);
         if (!author) {
             throw Error('There is no author with that Id');
-        }    
+        }
         return await AuthorModel.findByIdAndUpdate(id, data);
     } catch (e) {
         throw Error('Error updating author');
@@ -36,8 +36,8 @@ export const deleteAuthor = async (id) => {
         if (!author) {
             throw 'There is no author with that Id';
         }
-        const games = await getGame({category});
-        if(games.length > 0) {
+        const games = await getGame({ author });
+        if (games.length > 0) {
             throw 'There are games related to this author';
         }
         return await AuthorModel.findByIdAndDelete(id);
@@ -51,7 +51,7 @@ export const getAuthorsPageable = async (page, limit, sort) => {
         [sort?.property || 'name']: sort?.direction === 'DESC' ? 'DESC' : 'ASC'
     };
     try {
-       const options = {
+        const options = {
             page: parseInt(page) + 1,
             limit,
             sort: sortObj
@@ -60,6 +60,6 @@ export const getAuthorsPageable = async (page, limit, sort) => {
         return await AuthorModel.paginate({}, options);
     } catch (err) {
         throw Error('Error deleting author');
-    }    
+    }
 }
 
