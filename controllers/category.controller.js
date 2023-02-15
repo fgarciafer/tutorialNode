@@ -1,61 +1,57 @@
-import CategoryModel from '../schemas/category.schema.js';
-
-export const getCategories = async (req, res) => {
-
-    const categories = await CategoryModel.find().sort('name');
-
-    res.status(200).json(
-        categories
-    );
-}
+import * as CategoryService from '../services/category.service.js';
 
 export const createCategory = async (req, res) => {
     const { name } = req.body;
-    const category = new CategoryModel({ name });
-
     try {
-        const categorySaved = await category.save();
+        const category = await CategoryService.createCategory(name);
         res.status(200).json({
-            category: categorySaved
+            category
         });
     } catch (err) {
-        res.status(500).json({
-            msg: 'Error creating category'
+        res.status(400).json({
+            msg: err.toString()
         });
     }
 }
 
-export const updateCategory = async (req, res) => {
-    const categoryId = req.params.id;
-    const category = await CategoryModel.findById(categoryId);
-    if (!category) {
-        return res.status(404).json({
-            msg: 'There is no category with that Id'
+export const getCategories = async (req, res) => {
+    try {
+        const categories = await CategoryService.getCategories();
+        res.status(200).json(
+            categories
+        );
+    } catch (err) {
+        res.status(400).json({
+            msg: err.toString()
         });
     }
+}
 
-    await CategoryModel.findByIdAndUpdate(categoryId, req.body, { new: true });
-    res.status(200).json(1);
+
+
+export const updateCategory = async (req, res) => {
+    const categoryId = req.params.id;
+    const { name } = req.body;
+    try {
+        await CategoryService.updateCategory(categoryId, name);
+        res.status(200).json(1);
+    } catch (err) {
+        res.status(400).json({
+            msg: err.toString()
+        });
+    }
 }
 
 export const deleteCategory = async (req, res) => {
     const categoryId = req.params.id;
     try {
-        const category = await CategoryModel.findById(categoryId);
-
-        if (!category) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'There is no category with that Id'
-            });
-        }
-        const deletedCategory = await CategoryModel.findByIdAndDelete(categoryId);
+        const deletedCategory = await CategoryService.deleteCategory(categoryId);
         res.status(200).json({
             category: deletedCategory
         });
     } catch (err) {
-        res.status(500).json({
-            msg: 'Error deleting category'
+        res.status(400).json({
+            msg: err.toString()
         });
     }
 }

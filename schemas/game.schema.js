@@ -9,7 +9,9 @@ const gameSchema = new Schema({
     },
     age: {
         type: Number,
-        require: true
+        require: true,
+        max: 99,
+        min: 0
     },
     category: {
         type: Schema.Types.ObjectId,

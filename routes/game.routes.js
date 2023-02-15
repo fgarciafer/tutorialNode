@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 import validateFields from '../middlewares/validate-Fields.js';
 import { createGame, getGames, updateGame } from '../controllers/game.controller.js';
-const authorRouter = Router();
+const gameRouter = Router();
 
-authorRouter.put('/:id', [
+gameRouter.put('/:id', [
     check('title').not().isEmpty(),
     check('age').not().isEmpty(),
     check('category.id').not().isEmpty(),
@@ -12,7 +12,7 @@ authorRouter.put('/:id', [
     validateFields
 ], updateGame);
 
-authorRouter.put('/', [
+gameRouter.put('/', [
     check('title').not().isEmpty(),
     check('age').not().isEmpty(),
     check('age').isNumeric(),
@@ -21,8 +21,8 @@ authorRouter.put('/', [
     validateFields
 ], createGame);
 
-authorRouter.get('/', getGames);
-authorRouter.get('/:query', getGames);
+gameRouter.get('/', getGames);
+gameRouter.get('/:query', getGames);
 
 
-export default authorRouter;
+export default gameRouter;

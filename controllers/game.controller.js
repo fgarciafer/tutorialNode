@@ -1,47 +1,39 @@
-import GameModel from '../schemas/game.schema.js';
+import * as GameService from '../services/game.service.js';
 
 export const getGames = async (req, res) => {
-    const titleToFind = req.query?.title || '';
-    const categoryToFind = req.query?.idCategory || null;
-    const regexTitle = new RegExp(titleToFind, 'i');
-    const find = categoryToFind ? { $and: [{ title: regexTitle }, { category: categoryToFind }] } : { title: regexTitle };
-    const games = await GameModel.find(find).sort('id').populate('category').populate('author');
-    res.status(200).json(games);
+    try {
+        const titleToFind = req.query?.title || '';
+        const categoryToFind = req.query?.idCategory || null;
+        const games = await GameService.getGames(titleToFind, categoryToFind);
+        res.status(200).json(games);
+    } catch(err) {
+        res.status(400).json({
+            msg: err.toString()
+        });
+    }
 }
 
 export const createGame = async (req, res) => {
-    const game = new GameModel({
-        ...req.body,
-        category: req.body.category.id,
-        author: req.body.author.id,
-    });
-
     try {
-        const gameSaved = await game.save();
+        const game = await GameService.createGame(req.body);
         res.status(200).json({
-            game: gameSaved
+            game
         });
     } catch (err) {
-        res.status(500).json({
-            msg: 'Error creating game'
+        res.status(400).json({
+            msg: err.toString()
         });
     }
 }
 
 export const updateGame = async (req, res) => {
     const gameId = req.params.id;
-    const game = await GameModel.findById(gameId);
-    if (!game) {
-        return res.status(404).json({
-            msg: 'There is no game with that Id'
+    try {
+        await GameModel.updateGame(gameId, req.body);
+        res.status(200).json(1);
+    } catch (err) {
+        res.status(400).json({
+            msg: err.toString()
         });
     }
-
-    const gameToUpdate = {
-        ...req.body,
-        category: req.body.category.id,
-        author: req.body.author.id,
-    };
-    await GameModel.findByIdAndUpdate(gameId, gameToUpdate, { new: false });
-    res.status(200).json(1);
 }
