@@ -5,7 +5,7 @@ export const getGames = async (title, category) => {
         const regexTitle = new RegExp(title, 'i');
         const find = category ? { $and: [{ title: regexTitle }, { category: category }] } : { title: regexTitle };
         return await GameModel.find(find).sort('id').populate('category').populate('author');
-    } catch(e) {
+    } catch (e) {
         throw Error('Error fetching games');
     }
 }
@@ -28,7 +28,7 @@ export const updateGame = async (id, data) => {
         const game = await GameModel.findById(id);
         if (!game) {
             throw Error('There is no game with that Id');
-        }    
+        }
         const gameToUpdate = {
             ...data,
             category: data.category.id,

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 import normalize from 'normalize-mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 const { Schema, model } = mongoose;

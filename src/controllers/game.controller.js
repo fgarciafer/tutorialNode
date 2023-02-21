@@ -6,7 +6,7 @@ export const getGames = async (req, res) => {
         const categoryToFind = req.query?.idCategory || null;
         const games = await GameService.getGames(titleToFind, categoryToFind);
         res.status(200).json(games);
-    } catch(err) {
+    } catch (err) {
         res.status(400).json({
             msg: err.toString()
         });

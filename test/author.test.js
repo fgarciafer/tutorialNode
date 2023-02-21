@@ -2,8 +2,8 @@ import supertest from 'supertest';
 import { jest } from '@jest/globals';
 import App, { server } from '../index';
 import mongoose from 'mongoose';
-import AuthorModel from '../schemas/author.schema';
-import GameModel from '../schemas/game.schema';
+import AuthorModel from '../src/schemas/author.schema';
+import GameModel from '../src/schemas/game.schema';
 
 const api = supertest(App);
 const initialAuthors = [{
