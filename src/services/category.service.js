@@ -37,7 +37,6 @@ export const deleteCategory = async (id) => {
             throw 'There are games related to this category';
         }
         const res = await CategoryModel.findByIdAndDelete(id);
-        console.log(res);
         return res;
     } catch (e) {
         throw Error(e);

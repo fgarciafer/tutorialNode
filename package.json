@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./index.js",
-    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --silent",
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --silent --runInBand",
     "test:watch": "npm run test -- --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
+
   "dependencies": {
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",

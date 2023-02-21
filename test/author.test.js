@@ -28,84 +28,86 @@ afterEach(() => {
     jest.resetAllMocks();
 });
 
-test('get authors', async () => {
-    const response = await api.get('/author').expect(200);
-    expect(response.body).toHaveLength(initialAuthors.length);
-});
+describe('author test', () => {
+    test('get authors', async () => {
+        const response = await api.get('/author').expect(200);
+        expect(response.body).toHaveLength(initialAuthors.length);
+    });
 
-test('get authors pageable', async () => {
-    const response = await api.post('/author').send({ pageable: { pageSize: 5, pageNumber: 0 } }).expect(200);
-    expect(response.body.content).toHaveLength(initialAuthors.length);
-});
+    test('get authors pageable', async () => {
+        const response = await api.post('/author').send({ pageable: { pageSize: 5, pageNumber: 0 } }).expect(200);
+        expect(response.body.content).toHaveLength(initialAuthors.length);
+    });
 
-test('create author', async () => {
-    const newAuthor = { "name": "author3", "nationality": "ES" };
-    await api.put('/author').send(newAuthor).expect(200);
+    test('create author', async () => {
+        const newAuthor = { "name": "author3", "nationality": "ES" };
+        await api.put('/author').send(newAuthor).expect(200);
 
-    const response = await api.get('/author');
-    expect(response.body).toHaveLength(initialAuthors.length + 1);
-});
+        const response = await api.get('/author');
+        expect(response.body).toHaveLength(initialAuthors.length + 1);
+    });
 
-test('create author with error', async () => {
-    jest.spyOn(AuthorModel.prototype, 'save')
-        .mockImplementationOnce(() => Promise.reject('fail create'));
-    const newAuthor = { "name": "author3", "nationality": "ES" };
-    await api.put('/author').send(newAuthor).expect(400);
-});
+    test('create author with error', async () => {
+        jest.spyOn(AuthorModel.prototype, 'save')
+            .mockImplementationOnce(() => Promise.reject('fail create'));
+        const newAuthor = { "name": "author3", "nationality": "ES" };
+        await api.put('/author').send(newAuthor).expect(400);
+    });
 
-test('update author', async () => {
-    const response = await api.get('/author');
-    const id = response.body[0].id;
+    test('update author', async () => {
+        const response = await api.get('/author');
+        const id = response.body[0].id;
 
-    const newAuthor = { "name": "author1Modified", "nationality": "ES" };
-    await api.put('/author/' + id).send(newAuthor).expect(200);
+        const newAuthor = { "name": "author1Modified", "nationality": "ES" };
+        await api.put('/author/' + id).send(newAuthor).expect(200);
 
-    const responseAfterUpdate = await api.get('/author');
-    expect(responseAfterUpdate.body[0].name).toBe('author1Modified');
-});
+        const responseAfterUpdate = await api.get('/author');
+        expect(responseAfterUpdate.body[0].name).toBe('author1Modified');
+    });
 
-test('update author with error', async () => {
-    const newAuthor = { "name": "author1Modified", "nationality": "ES" };
-    await api.put('/author/' + 'noExist').send(newAuthor).expect(400);
-});
+    test('update author with error', async () => {
+        const newAuthor = { "name": "author1Modified", "nationality": "ES" };
+        await api.put('/author/' + 'noExist').send(newAuthor).expect(400);
+    });
 
-test('delete author', async () => {
-    const response = await api.get('/author');
-    const id = response.body[0].id;
+    test('delete author', async () => {
+        const response = await api.get('/author');
+        const id = response.body[0].id;
 
-    await api.delete('/author/' + id).expect(200);
+        await api.delete('/author/' + id).expect(200);
 
-    const responseAfterDelete = await api.get('/author');
-    expect(responseAfterDelete.body).toHaveLength(response.body.length - 1);
-});
+        const responseAfterDelete = await api.get('/author');
+        expect(responseAfterDelete.body).toHaveLength(response.body.length - 1);
+    });
 
-test('delete author with error', async () => {
-    const response = await api.get('/author');
-    const id = response.body[0].id;
-    jest.spyOn(AuthorModel, 'findByIdAndDelete').mockRejectedValueOnce(1);
-    await api.delete('/author/' + id).expect(400);
-});
+    test('delete author with error', async () => {
+        const response = await api.get('/author');
+        const id = response.body[0].id;
+        jest.spyOn(AuthorModel, 'findByIdAndDelete').mockRejectedValueOnce(1);
+        await api.delete('/author/' + id).expect(400);
+    });
 
-test('update author with wrong id', async () => {
-    const newAuthor = { "name": "author1Modified", "nationality": "ES" };
-    const id = 1;
-    jest.spyOn(AuthorModel, 'findById').mockResolvedValue(null);
-    await api.put('/author/' + id).send(newAuthor).expect(400);
-});
+    test('update author with wrong id', async () => {
+        const newAuthor = { "name": "author1Modified", "nationality": "ES" };
+        const id = 1;
+        jest.spyOn(AuthorModel, 'findById').mockResolvedValue(null);
+        await api.put('/author/' + id).send(newAuthor).expect(400);
+    });
 
-test('delete author with wrong id', async () => {
-    const response = await api.get('/author');
-    const id = response.body[0].id;
-    jest.spyOn(AuthorModel, 'findById').mockResolvedValue(null);
-    await api.delete('/author/' + id).expect(400);
-});
+    test('delete author with wrong id', async () => {
+        const response = await api.get('/author');
+        const id = response.body[0].id;
+        jest.spyOn(AuthorModel, 'findById').mockResolvedValue(null);
+        await api.delete('/author/' + id).expect(400);
+    });
 
 
-test('delete author with game', async () => {
-    const response = await api.get('/author');
-    const id = response.body[0].id;
-    jest.spyOn(GameModel, 'find').mockResolvedValue([1]);
-    await api.delete('/author/' + id).expect(400);
+    test('delete author with game', async () => {
+        const response = await api.get('/author');
+        const id = response.body[0].id;
+        jest.spyOn(GameModel, 'find').mockResolvedValue([1]);
+        await api.delete('/author/' + id).expect(400);
+    });
 });
 
 afterAll(() => {
