@@ -1,11 +1,8 @@
 import AuthorModel from '../schemas/author.schema.js';
+import { getGame } from './game.service.js';
 
 export const getAuthors = async () => {
-    try {
-        return await AuthorModel.find().sort('id');
-    } catch (e) {
-        throw Error('Error fetching authors');
-    }
+    return await AuthorModel.find().sort('id');
 }
 
 export const createAuthor = async (data) => {
@@ -50,16 +47,13 @@ export const getAuthorsPageable = async (page, limit, sort) => {
     const sortObj = {
         [sort?.property || 'name']: sort?.direction === 'DESC' ? 'DESC' : 'ASC'
     };
-    try {
-        const options = {
-            page: parseInt(page) + 1,
-            limit,
-            sort: sortObj
-        };
 
-        return await AuthorModel.paginate({}, options);
-    } catch (err) {
-        throw Error('Error deleting author');
-    }
+    const options = {
+        page: parseInt(page) + 1,
+        limit,
+        sort: sortObj
+    };
+
+    return await AuthorModel.paginate({}, options);
 }
 
